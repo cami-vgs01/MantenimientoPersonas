@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mantenimiento de Personas</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Mantenimiento de Personas</h1>
+    </header>
+    <form id="person-form">
+        <input type="text" id="name" placeholder="Nombre" required>
+        <input type="number" id="age" placeholder="Edad" required>
+        <button type="submit">Agregar Persona</button>
+    </form>
+    <h2>Lista de Personas (Local Storage)</h2>
+    <div id="person-list-local"></div>
+    <h2>Lista de Personas (Session Storage)</h2>
+    <div id="person-list-session"></div>
+    <footer>
+        <p>Copyright ©2024 Mantenimiento de Personas</p>
+    </footer>
+    <script src="scripts/scripts.js"></script>
+</body>
+</html>
