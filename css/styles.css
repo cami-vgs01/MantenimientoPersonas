@@ -128,3 +128,25 @@ footer {
     color: #777;
     font-size: 0.9em;
 }
+
+@media screen and (max-width: 768px) {
+    h1, h2 {
+        font-size: 1.5em;
+    }
+
+    form {
+        flex-direction: column;
+    }
+
+    input, button {
+        margin: 5px 0; 
+    }
+
+    table {
+        width: 100%; 
+    }
+
+    #person-list-local, #person-list-session {
+        flex-direction: column;
+    }
+}
