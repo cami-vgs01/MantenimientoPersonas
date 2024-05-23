@@ -129,6 +129,21 @@ footer {
     font-size: 0.9em;
 }
 
+#cancel-button {
+    background-color: #ffc107;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-left: 10px;
+}
+
+#cancel-button:hover {
+    background-color: #e0a800;
+    transform: scale(1.05);
+}
+
+
 @media screen and (max-width: 768px) {
     h1, h2 {
         font-size: 1.5em;

@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('person-form');
+    const cancelButton = document.getElementById('cancel-button');
+    const submitButton = document.getElementById('submit-button');
     const personListLocal = document.getElementById('person-list-local');
     const personListSession = document.getElementById('person-list-session');
     let editIndex = null;
@@ -7,9 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
+        const id = document.getElementById('id').value;
         const name = document.getElementById('name').value;
         const age = document.getElementById('age').value;
-        const person = { name, age };
+        const person = { id, name, age };
 
         if (isEditing) {
             updatePersonInLocalStorage(editIndex, person);
@@ -17,7 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
             loadPersonsFromLocalStorage();
             loadPersonsFromSessionStorage();
             isEditing = false;
+            document.getElementById('id').disabled = false;
+            cancelButton.style.display = 'none';
+            submitButton.textContent = 'Agregar Persona';
         } else {
+            if (!isIDUnique(id)) {
+                alert("El ID debe ser único. Por favor, ingrese un ID diferente.");
+                return;
+            }
             savePersonToLocal(person);
             savePersonToSession(person);
             loadPersonsFromLocalStorage();
@@ -26,6 +36,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         form.reset();
     });
+
+    cancelButton.addEventListener('click', () => {
+        form.reset();
+        document.getElementById('id').disabled = false;
+        cancelButton.style.display = 'none';
+        submitButton.textContent = 'Agregar Persona';
+        isEditing = false;
+    });
+
+    function isIDUnique(id) {
+        const personsLocal = JSON.parse(localStorage.getItem('persons')) || [];
+        const personsSession = JSON.parse(sessionStorage.getItem('persons')) || [];
+        return !personsLocal.some(person => person.id === id) && !personsSession.some(person => person.id === id);
+    }
 
     function savePersonToLocal(person) {
         let persons = JSON.parse(localStorage.getItem('persons')) || [];
@@ -69,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             table = document.createElement('table');
             table.innerHTML = `<thead>
                 <tr>
+                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Edad</th>
                     <th>Acciones</th>
@@ -80,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let tbody = table.querySelector('tbody');
         const row = document.createElement('tr');
         row.innerHTML = `
+            <td>${person.id}</td>
             <td>${person.name}</td>
             <td>${person.age}</td>
             <td>
@@ -88,15 +114,18 @@ document.addEventListener('DOMContentLoaded', () => {
             </td>
         `;
         tbody.appendChild(row);
-    
+
         row.querySelector('.edit').addEventListener('click', (e) => {
             const idx = e.target.getAttribute('data-index');
             editPersonFromLocalStorage(idx);
             editPersonFromSessionStorage(idx);
             isEditing = true;
             editIndex = idx;
+            document.getElementById('id').disabled = true;
+            cancelButton.style.display = 'inline-block';
+            submitButton.textContent = 'Actualizar Persona';
         });
-    
+
         row.querySelector('.delete').addEventListener('click', (e) => {
             const idx = e.target.getAttribute('data-index');
             deletePersonFromLocalStorage(idx);
@@ -105,11 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
             loadPersonsFromSessionStorage();
         });
     }
-    
 
     function editPersonFromLocalStorage(index) {
         let persons = JSON.parse(localStorage.getItem('persons')) || [];
         const person = persons[index];
+        document.getElementById('id').value = person.id;
         document.getElementById('name').value = person.name;
         document.getElementById('age').value = person.age;
     }
@@ -117,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function editPersonFromSessionStorage(index) {
         let persons = JSON.parse(sessionStorage.getItem('persons')) || [];
         const person = persons[index];
+        document.getElementById('id').value = person.id;
         document.getElementById('name').value = person.name;
         document.getElementById('age').value = person.age;
     }
